@@ -14,7 +14,7 @@ class SnakeGame extends StatefulWidget {
 
 class _SnakeGameState extends State<SnakeGame> {
   GlobalKey _keyRed = GlobalKey();
-  SnakePage snakePage = SnakePage(shape: ShapeBuilder().initShape(),);
+  MySnakePage snakePage = MySnakePage(shape: ShapeBuilder().initShape(),);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +87,9 @@ class _SnakeGameState extends State<SnakeGame> {
                         child: Icon(Icons.keyboard_arrow_down),
                         onTap: (){
                           //Shape shape = snakePage.shape;
-                          snakePage.snake.shape.moveDown();
+                          setState(() {
+                            snakePage.shape.moveDown();
+                          });
                           //snakePage.snake
                         },
                       )
@@ -102,32 +104,41 @@ class _SnakeGameState extends State<SnakeGame> {
   }
 }
 
-class SnakePage extends StatelessWidget{
-  SnakePage({this.shape});
+class MySnakePage extends StatefulWidget {
+  MySnakePage({this.shape});
   final Shape shape;
-  Snake snake;
+  @override
+  _MySnakePageState createState() => _MySnakePageState();
+}
+
+class _MySnakePageState extends State<MySnakePage> {
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    snake = Snake(shape: shape);
     return FittedBox(
       child: SizedBox(
         width: 400,
         height: 400,
-        child: Container(
-          color: Colors.brown,
+        child: GestureDetector(
+            onTap: (){
+              setState(() {
+                widget.shape.moveDown();
+              });
+            },
             child: CustomPaint(
-          painter: snake,
-        )
+              painter: Snake(items: widget.shape.items),
+            )
         ),
       ),
     );
   }
 }
+
+
 class Snake extends CustomPainter{
 
-  Snake({this.shape});
-  Shape shape;
+  Snake({this.items});
+  List<ShapeItem> items;
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: implement paint
@@ -136,8 +147,8 @@ class Snake extends CustomPainter{
 
     myPaint.strokeWidth = 5;
 
-    for(int i=shape.items.length-1;i>=0;i--) {
-      ShapeItem item = shape.items[i];
+    for(int i=items.length-1;i>=0;i--) {
+      ShapeItem item = items[i];
       if (i == 0) {
         myPaint.color = Colors.red;
       }else{
@@ -150,7 +161,12 @@ class Snake extends CustomPainter{
 
   @override
   bool shouldRepaint(Snake oldDelegate) {
-    return false;
+    print(oldDelegate.items[0].y);
+    print(items[0].y);
+    print(oldDelegate.items[0].x);
+    print(items[0].x);
+
+    return oldDelegate.items[0].y!=items[0].y;
   }
 
 }
