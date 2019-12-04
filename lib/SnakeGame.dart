@@ -127,7 +127,7 @@ class Snake extends CustomPainter{
 
     Paint myPaint = Paint();
 
-    myPaint.strokeWidth = 10;
+    myPaint.strokeWidth = 5;
 
     for(int i=shape.items.length-1;i>=0;i--) {
       ShapeItem item = shape.items[i];
