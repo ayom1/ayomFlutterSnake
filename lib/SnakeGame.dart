@@ -14,9 +14,9 @@ class SnakeGame extends StatefulWidget {
 
 class _SnakeGameState extends State<SnakeGame> {
   GlobalKey _keyRed = GlobalKey();
+  SnakePage snakePage = SnakePage(shape: ShapeBuilder().initShape(),);
   @override
   Widget build(BuildContext context) {
-    Shape shape = ShapeBuilder().initShape();
     return Scaffold(
       key: _keyRed,
       appBar: AppBar(
@@ -40,7 +40,7 @@ class _SnakeGameState extends State<SnakeGame> {
               flex: 4,
               child: SizedBox(
 
-                child: SnakePage(shape: shape,),
+                child: snakePage,
                 width: 400,height: 600,
               ),
             ),
@@ -85,6 +85,11 @@ class _SnakeGameState extends State<SnakeGame> {
                     color: Colors.blue,
                       child: GestureDetector(
                         child: Icon(Icons.keyboard_arrow_down),
+                        onTap: (){
+                          //Shape shape = snakePage.shape;
+                          snakePage.snake.shape.moveDown();
+                          //snakePage.snake
+                        },
                       )
                   )
                 ],
@@ -100,10 +105,11 @@ class _SnakeGameState extends State<SnakeGame> {
 class SnakePage extends StatelessWidget{
   SnakePage({this.shape});
   final Shape shape;
+  Snake snake;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
+    snake = Snake(shape: shape);
     return FittedBox(
       child: SizedBox(
         width: 400,
@@ -111,7 +117,7 @@ class SnakePage extends StatelessWidget{
         child: Container(
           color: Colors.brown,
             child: CustomPaint(
-          painter: Snake(shape: shape),
+          painter: snake,
         )
         ),
       ),
@@ -119,6 +125,7 @@ class SnakePage extends StatelessWidget{
   }
 }
 class Snake extends CustomPainter{
+
   Snake({this.shape});
   Shape shape;
   @override
@@ -142,7 +149,7 @@ class Snake extends CustomPainter{
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
+  bool shouldRepaint(Snake oldDelegate) {
     return false;
   }
 
